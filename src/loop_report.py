@@ -105,11 +105,24 @@ def loop_report():
                         print(f"Se seleccionó la opción: {option.text}")
                         break
 
-                time.sleep(2)
+                time.sleep(3)
                 concept_input = WebDriverWait(driver, 10).until(EC. element_to_be_clickable((By.ID, "vING_IFA_CONCOD")))
+                time.sleep(3)
                 concept_input.click()
                 time.sleep(2)
                 concept_input.send_keys(client['service'])
+                time.sleep(2)
+
+                date_actual = datetime.now()
+                period = date_actual.strftime("%m/%Y")
+                period_text = f' - Periodo {period}'
+                desc_input = WebDriverWait(driver, 10).until(EC. element_to_be_clickable((By.ID, "vING_IFA_DESCRIP")))
+                time.sleep(3)
+                desc_input.click()
+                time.sleep(3)
+                desc_input.click()
+                time.sleep(2)
+                desc_input.send_keys(period_text)
                 time.sleep(2)
                 
                 cant_input = WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "vING_IFA_CANTIDA")))
@@ -128,7 +141,7 @@ def loop_report():
                 time.sleep(2)
                 add_concept = WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "AGREGARARTCON")))
                 add_concept.click()
-                time.sleep(2)
+                time.sleep(5)
 
                 numbers_day = int(client['pay_days'])
                 date_actual = datetime.now()
@@ -138,13 +151,10 @@ def loop_report():
                 payment_due_date = WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "vFA_VTOPAG")))
                 payment_due_date.click()
                 time.sleep(2)
-                payment_due_date.clear()
+                payment_due_date.click()
                 time.sleep(2)
                 payment_due_date.send_keys(date_fromated)
-                time.sleep(2)
-                confirm_date = WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "vFA_VTOPAG_dp_trigger")))
-                confirm_date.click()
-                time.sleep(2)
+                time.sleep(5)
 
                 confirm_btn = WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "CONFIRMAR")))
                 confirm_btn.click()
@@ -161,6 +171,7 @@ def loop_report():
                 time.sleep(5)
                 close_window= WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "gxp0_cls")))
                 close_window.click()
+
             time.sleep(3)
             user_btn = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH,'//*[@id="vUSERAVATARSMALL_MPAGE"]')))
             user_btn.click()
