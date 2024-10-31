@@ -150,9 +150,9 @@ def loop_report():
                 time.sleep(2)
                 payment_due_date = WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "vFA_VTOPAG")))
                 payment_due_date.click()
-                time.sleep(2)
+                time.sleep(5)
                 payment_due_date.click()
-                time.sleep(2)
+                time.sleep(5)
                 payment_due_date.send_keys(date_fromated)
                 time.sleep(5)
 
