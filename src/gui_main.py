@@ -1,23 +1,19 @@
-import tkinter as tk
 import time
 from read_sheet import get_clients_from_sheets
 from loop_report import loop_report
 
-def main_gui():
+def run_automated_process():
     try:
-        holistor_window = tk.Tk()
-        holistor_window.title('Automatizacion de Facturacion - Holistor ERP')
-        holistor_window.geometry('400x200')
+        print("Iniciando proceso de automatización...")
+        
+        # Si necesitás trabajar con los clientes antes de pasar a loop_report():
+        # clients = get_clients_from_sheets()
+        # print(f"Clientes encontrados: {clients}")
+        
+        loop_report()
 
-        btn_loop = tk.Button(holistor_window, text='Iniciar bucle', command=login_and_open_vouchers)
-        btn_loop.grid(row=8, column=0, columnspan=2, padx=5, pady=5, sticky='w')
+        print("Proceso completado con éxito.")
 
-        holistor_window.mainloop()
-    
     except Exception as e:
-        print('Error:', str(e))
-
-def login_and_open_vouchers():
-    loop_report()
-
-main_gui()
+        print(f"Error durante la ejecución automática: {e}")
+        input("Presione Enter para salir...")

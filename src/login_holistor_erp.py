@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 def login_erp():
     try:
         options = webdriver.ChromeOptions()
-        download_directory = r"c:\default_emails"
+        download_directory = r"D:\default_emails"
         options.add_argument('--start-maximized')
         options.add_argument("--disable-blink-features=AutomationControlled")
         options.add_argument("--disable-gpu")

@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException
 from datetime import datetime, timedelta
 from selenium.webdriver.support.ui import Select
 
@@ -15,8 +16,8 @@ def loop_report():
 
        # Lista de empresas con su hoja de Google Sheets correspondiente
         companys = [
-            {"name": "0000000003 - DI GIÁCOMO NICOLAS", "sheet_name": "Facturacion-Nicolas"},
             {"name": "0000000002 - DI GIÁCOMO JUAN EZEQUIEL", "sheet_name": "Facturacion-Juan"},
+            {"name": "0000000003 - DI GIÁCOMO NICOLAS", "sheet_name": "Facturacion-Nicolas"},
             {"name": "0000000001 - DI GIACOMO FRANCISCO", "sheet_name": "Facturacion-Francisco"}
         ]
 
@@ -33,7 +34,6 @@ def loop_report():
             print("Alerta no encontrada, continuar")
 
         time.sleep(5)
-
 
         # Seleccionar el ERP
         btn_erp = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/app-root/ng-component/div/default-layout/div/div[2]/div/div[2]/div[3]/ng-component/plataforma-dashboard/div[2]/div/div[1]/div/div[1]/div/img')))
@@ -106,8 +106,7 @@ def loop_report():
                         break
 
                 time.sleep(3)
-                concept_input = WebDriverWait(driver, 10).until(EC. element_to_be_clickable((By.ID, "vING_IFA_CONCOD")))
-                time.sleep(3)
+                concept_input = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "vING_IFA_CONCOD")))
                 concept_input.click()
                 time.sleep(2)
                 concept_input.send_keys(client['service'])
@@ -116,61 +115,78 @@ def loop_report():
                 date_actual = datetime.now()
                 period = date_actual.strftime("%m/%Y")
                 period_text = f' - Periodo {period}'
-                desc_input = WebDriverWait(driver, 10).until(EC. element_to_be_clickable((By.ID, "vING_IFA_DESCRIP")))
-                time.sleep(3)
-                desc_input.click()
-                time.sleep(3)
+                desc_input = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "vING_IFA_DESCRIP")))
                 desc_input.click()
                 time.sleep(2)
                 desc_input.send_keys(period_text)
                 time.sleep(2)
-                
-                cant_input = WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "vING_IFA_CANTIDA")))
+
+                cant_input = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "vING_IFA_CANTIDA")))
                 cant_input.click()
                 time.sleep(2)
                 cant_input.clear()
-                time.sleep(2)
                 cant_input.send_keys(client['cant'])
-                
-                time.sleep(5)
-                honorary_input = WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "vING_IFA_UNIPREC")))
+                time.sleep(2)
+
+                honorary_input = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "vING_IFA_UNIPREC")))
                 honorary_input.click()
                 time.sleep(2)
                 honorary_input.clear()
                 honorary_input.send_keys(client['honorary'])
                 time.sleep(2)
-                add_concept = WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "AGREGARARTCON")))
+
+                add_concept = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "AGREGARARTCON")))
                 add_concept.click()
+                time.sleep(5)
+                desc_input = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "vING_IFA_DESCRIP")))
+                desc_input.click()
                 time.sleep(5)
 
                 numbers_day = int(client['pay_days'])
-                date_actual = datetime.now()
-                new_date = date_actual + timedelta(days=numbers_day)
-                date_fromated = new_date.strftime("%d/%m/%Y")
-                time.sleep(2)
-                payment_due_date = WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "vFA_VTOPAG")))
-                payment_due_date.click()
-                time.sleep(5)
-                payment_due_date.click()
-                time.sleep(5)
-                payment_due_date.send_keys(date_fromated)
-                time.sleep(5)
+                new_date = datetime.now() + timedelta(days=numbers_day)
+                date_formatted = new_date.strftime("%d/%m/%Y")
 
-                confirm_btn = WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "CONFIRMAR")))
+                payment_due_date = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "vFA_VTOPAG")))
+                payment_due_date.clear()
+                payment_due_date.click()
+                time.sleep(5)
+                payment_due_date.send_keys(date_formatted)
+                time.sleep(15)
+
+                confirm_btn = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "CONFIRMAR")))
                 confirm_btn.click()
                 time.sleep(2)
-                confirm_cae= WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "CONFIRMAR_FE"))) 
-                #CANCELAR_FE
+
+                confirm_cae = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "CONFIRMAR_FE")))
                 confirm_cae.click()
                 time.sleep(2)
-                window_ok = WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.ID, "gxp0_b"))
-                )
-                close_window= WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "gxp0_cls")))
-                close_window.click()
-                time.sleep(5)
-                close_window= WebDriverWait(driver, 10).until(EC. presence_of_element_located((By.ID, "gxp0_cls")))
-                close_window.click()
+                #CANCELAR_FE CONFIRMAR_FE
+
+                try:
+                    window_ok = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.ID, "gxp0_cls"))
+                    )
+                    window_ok.click()
+                except TimeoutException:
+                    print("El elemento 'gxp0_b' no está disponible, continuando con el flujo.")
+                try:
+                    window_ok = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.ID, "gxp0_cls"))
+                    )
+                    window_ok.click()
+                except TimeoutException:
+                    print("El elemento 'gxp0_b' no está disponible, continuando con el flujo.")
+
+                try:
+                    span = driver.find_element(By.ID, "TEXTBLOCK_ATTRIBUTES_IMPUTACIONES")
+
+                    if span.text.strip() == "Imputación a comprobantes con importe a cancelar":
+                        boton_cancelar = driver.find_element(By.ID, "VOLVER")
+                        boton_cancelar.click()
+                        print("Botón Cancelar clickeado correctamente.")
+                        
+                except NoSuchElementException:
+                    print("Elemento 'Imputación a comprobantes con importe a cancelar' no encontrado")
 
             time.sleep(3)
             user_btn = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH,'//*[@id="vUSERAVATARSMALL_MPAGE"]')))
